@@ -77,12 +77,11 @@ class MovieCreateSerializer(MovieSerializer):
 
 
 class MovieSessionSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(read_only=True)
 
     class Meta:
         model = MovieSession
         fields = ("id", "show_time",
-                  "movie", "cinema_hall", "image")
+                  "movie", "cinema_hall")
 
 
 class MovieSessionListSerializer(MovieSessionSerializer):
