@@ -39,7 +39,8 @@ class Actor(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-def movie_image_path(instance: "Movie", filename: str, ext=None) -> pathlib.Path:
+def movie_image_path(instance: "Movie",
+                     filename: str, ext=None) -> pathlib.Path:
     filename = f"{slugify(instance.title)}-{uuid.uuid4()}{ext}"
     return pathlib.Path("upload-image") / pathlib.Path(filename)
 
@@ -50,7 +51,8 @@ class Movie(models.Model):
     duration = models.IntegerField()
     genres = models.ManyToManyField(Genre)
     actors = models.ManyToManyField(Actor)
-    image = models.ImageField(null=True, upload_to="movie_image_path")
+    image = models.ImageField(null=True,
+                              upload_to="movie_image_path")
 
     class Meta:
         ordering = ["title"]
@@ -86,21 +88,25 @@ class Order(models.Model):
 
 class Ticket(models.Model):
     movie_session = models.ForeignKey(
-        MovieSession, on_delete=models.CASCADE, related_name="tickets"
+        MovieSession, on_delete=models.CASCADE,
+        related_name="tickets"
     )
     order = models.ForeignKey(
-        Order, on_delete=models.CASCADE, related_name="tickets"
+        Order, on_delete=models.CASCADE,
+        related_name="tickets"
     )
     row = models.IntegerField()
     seat = models.IntegerField()
 
     @staticmethod
     def validate_ticket(row, seat, cinema_hall, error_to_raise):
-        for ticket_attr_value, ticket_attr_name, cinema_hall_attr_name in [
+        for (ticket_attr_value, ticket_attr_name,
+             cinema_hall_attr_name) in [
             (row, "row", "rows"),
             (seat, "seat", "seats_in_row"),
         ]:
-            count_attrs = getattr(cinema_hall, cinema_hall_attr_name)
+            count_attrs = getattr(cinema_hall,
+                                  cinema_hall_attr_name)
             if not (1 <= ticket_attr_value <= count_attrs):
                 raise error_to_raise(
                     {
@@ -128,7 +134,8 @@ class Ticket(models.Model):
     ):
         self.full_clean()
         return super(Ticket, self).save(
-            force_insert, force_update, using, update_fields
+            force_insert, force_update,
+            using, update_fields
         )
 
     def __str__(self):
